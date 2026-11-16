@@ -1989,23 +1989,50 @@ h1, h2, .section-title {
 /* ===== MOBILE RESPONSIVE FIXES ===== */
 @media (max-width: 768px) {
     /* Navigation mobile fixes */
+    .navbar {
+        position: fixed !important;
+        top: 0 !important;
+        width: 100% !important;
+        z-index: 1000 !important;
+    }
+    
     .navbar .container {
-        padding: 0.75rem 15px !important;
+        padding: 0.75rem 10px !important;
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
     }
     
     .nav-brand {
-        gap: 8px !important;
-        flex-shrink: 1 !important;
-        max-width: 60% !important;
-        overflow: hidden !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 6px !important;
+        flex-shrink: 0 !important;
+        max-width: none !important;
+        overflow: visible !important;
+    }
+    
+    .brand-icon {
+        font-size: 1rem !important;
+        flex-shrink: 0 !important;
     }
     
     .brand-text {
-        font-size: 1rem !important;
-        letter-spacing: 0.5px !important;
+        font-size: 0.85rem !important;
+        letter-spacing: 0.3px !important;
         white-space: nowrap !important;
-        overflow: hidden !important;
-        text-overflow: ellipsis !important;
+        overflow: visible !important;
+        text-overflow: clip !important;
+        display: inline-block !important;
+    }
+    
+    .menu-toggle {
+        flex-shrink: 0 !important;
+        margin-left: 10px !important;
+    }
+    
+    .nav-menu {
+        gap: 1.5rem !important;
     }
     
     /* Hero mobile fixes */
@@ -2094,8 +2121,17 @@ h1, h2, .section-title {
     }
 }
 
-/* Extra small devices */
+/* Extra small devices (< 375px) */
 @media (max-width: 375px) {
+    .brand-text {
+        font-size: 0.75rem !important;
+        letter-spacing: 0.2px !important;
+    }
+    
+    .brand-icon {
+        font-size: 0.9rem !important;
+    }
+    
     .hero-title,
     .hero h1, 
     .title-line {
@@ -2103,11 +2139,14 @@ h1, h2, .section-title {
         padding: 0 5px !important;
     }
     
-    .brand-text {
-        font-size: 0.9rem !important;
-    }
-    
     .nav-brand {
-        max-width: 50% !important;
+        gap: 4px !important;
+    }
+}
+
+/* Very small devices (< 320px) */
+@media (max-width: 320px) {
+    .brand-text {
+        font-size: 0.7rem !important;
     }
 }
