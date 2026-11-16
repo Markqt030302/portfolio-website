@@ -100,22 +100,28 @@
     // Load profile, skills, and contact data from backend API
     async function loadProfileDataFromServer() {
         try {
+            console.log('🔄 Loading profile data from backend...', API_URL);
             const response = await fetch(`${API_URL}/api/get-portfolio`);
             if (!response.ok) throw new Error('Failed to fetch profile data');
             
             const result = await response.json();
             const serverData = result.data;
             
+            console.log('📦 Server data received:', serverData);
+            
             if (serverData && Object.keys(serverData).length > 0) {
+                console.log('✅ Using server data');
                 // Use server data
                 return {
                     profile: serverData.profile || null,
                     skills: serverData.skills || null,
                     contact: serverData.contact || null
                 };
+            } else {
+                console.log('⚠️ Server data is empty');
             }
         } catch (error) {
-            console.error('Error loading profile data from server:', error);
+            console.error('❌ Error loading profile data from server:', error);
         }
         return null;
     }
