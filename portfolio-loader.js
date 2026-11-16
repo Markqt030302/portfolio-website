@@ -97,6 +97,14 @@
         }
     });
     
+    // Keep backend awake by pinging every 5 minutes
+    setInterval(() => {
+        fetch(`${API_URL}/api/health`).catch(() => {
+            console.log('Backend ping failed (this is normal if offline)');
+        });
+    }, 5 * 60 * 1000); // 5 minutes
+    console.log('⏰ Backend keep-alive enabled (pings every 5 minutes)');
+    
     // Load profile, skills, and contact data from backend API
     async function loadProfileDataFromServer() {
         try {
