@@ -3,7 +3,7 @@ const config = {
     // Change this to your deployed backend URL after deployment
     API_URL: window.location.hostname === 'localhost' 
         ? 'http://localhost:3000' 
-        : 'https://your-backend-url.onrender.com' // You'll update this after deploying to Render
+        : 'https://portfolio-website-7d97.onrender.com' // Your Render backend URL
 };
 
 // Make config available globally
