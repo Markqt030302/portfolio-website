@@ -41,6 +41,48 @@ function loadData() {
         portfolioData = JSON.parse(saved);
         populateFields();
     }
+    
+    // Also load videos from server and sync to localStorage
+    syncVideosFromServer();
+}
+
+// Sync videos from server API to localStorage
+async function syncVideosFromServer() {
+    try {
+        const apiUrl = window.API_CONFIG ? window.API_CONFIG.API_URL : 'http://localhost:3000';
+        const response = await fetch(`${apiUrl}/api/videos`);
+        
+        if (!response.ok) {
+            console.log('Could not fetch videos from server');
+            return;
+        }
+        
+        const data = await response.json();
+        const serverVideos = data.videos || [];
+        
+        if (serverVideos.length > 0) {
+            // Convert server video format to portfolio format
+            portfolioData.portfolio = serverVideos.map(video => ({
+                title: video.title,
+                thumbnail: video.thumbnail_url,
+                videoData: video.video_url,
+                videoSource: video.upload_type || 'direct',
+                description: '',
+                category: 'all',
+                tags: []
+            }));
+            
+            // Save to localStorage
+            localStorage.setItem('portfolioData', JSON.stringify(portfolioData));
+            
+            // Re-render portfolio list
+            renderPortfolioList();
+            
+            console.log(`Synced ${serverVideos.length} videos from server`);
+        }
+    } catch (error) {
+        console.error('Error syncing videos from server:', error);
+    }
 }
 
 // Save data to localStorage
@@ -508,10 +550,18 @@ function renderPortfolioList() {
         return;
     }
 
-    container.innerHTML = portfolioData.portfolio.map((item, index) => `
+    const apiUrl = window.API_CONFIG ? window.API_CONFIG.API_URL : 'http://localhost:3000';
+
+    container.innerHTML = portfolioData.portfolio.map((item, index) => {
+        // Fix thumbnail URL to use backend if it's a server path
+        const thumbnailUrl = item.thumbnail && item.thumbnail.startsWith('/uploads/') 
+            ? apiUrl + item.thumbnail 
+            : item.thumbnail;
+            
+        return `
         <div class="portfolio-item">
             <div class="portfolio-item-image">
-                <img src="${item.thumbnail}" alt="${item.title}">
+                <img src="${thumbnailUrl}" alt="${item.title}" crossorigin="anonymous">
             </div>
             <div class="portfolio-item-content">
                 <h4 class="portfolio-item-title">${item.title}</h4>
@@ -525,7 +575,8 @@ function renderPortfolioList() {
                 </div>
             </div>
         </div>
-    `).join('');
+        `;
+    }).join('');
 }
 
 // Get video size in MB (legacy function)
