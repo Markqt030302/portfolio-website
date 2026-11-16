@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Video Editor Portfolio - Your Name</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;900&family=Space+Grotesk:wght@300;400;500;600;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- AI Particles Background -->
+    <div class="ai-particles">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <span class="brand-icon">▶</span>
+                <span class="brand-text">MARK MANISAN</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#home" class="nav-link">Home</a></li>
+                <li><a href="#about" class="nav-link">About</a></li>
+                <li><a href="#portfolio" class="nav-link">Portfolio</a></li>
+                <li><a href="#skills" class="nav-link">Skills</a></li>
+                <li><a href="#contact" class="nav-link">Contact</a></li>
+            </ul>
+            <div class="menu-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-overlay"></div>
+        <div class="container hero-content">
+            <div class="hero-text">
+                <h1 class="hero-title">
+                    <span class="title-line">AI Video Editor</span>
+                    <span class="title-line">Creative Storyteller</span>
+                </h1>
+                <div class="hero-buttons">
+                    <a href="#portfolio" class="btn btn-primary">View My Work</a>
+                    <a href="#contact" class="btn btn-secondary">Get In Touch</a>
+                </div>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <span></span>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">About Me</h2>
+                <div class="title-underline"></div>
+            </div>
+            <div class="about-content">
+                <div class="about-image">
+                    <div class="image-wrapper">
+                        <img src="https://via.placeholder.com/400x500/667eea/ffffff?text=Your+Photo" alt="Profile Photo">
+                        <div class="image-border"></div>
+                    </div>
+                </div>
+                <div class="about-text">
+                    <h3>Crafting Visual Stories with AI Innovation</h3>
+                    <p>I'm a passionate AI Video Editor with [X] years of experience in creating engaging content that captivates audiences. Specializing in leveraging AI-powered tools to enhance efficiency and creativity, I transform raw footage into polished, professional videos.</p>
+                    
+                    <p>My approach combines technical expertise with artistic vision, utilizing the latest AI technologies for color grading, motion tracking, audio enhancement, and smart editing workflows.</p>
+                    
+                    <a href="#contact" class="btn btn-primary">Hire Me</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Portfolio Section -->
+    <section id="portfolio" class="portfolio">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">My Portfolio</h2>
+                <div class="title-underline"></div>
+                <p class="section-description">A showcase of my best AI-edited video projects</p>
+            </div>
+            
+            <!-- Filter Buttons -->
+            <div class="portfolio-filters">
+                <button class="filter-btn active" data-filter="all">All Projects</button>
+            </div>
+
+            <!-- Portfolio Carousel -->
+            <div class="portfolio-carousel-container">
+                <button class="carousel-btn carousel-prev" id="carouselPrev">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                
+                <div class="portfolio-carousel" id="portfolioCarousel">
+                    <div class="portfolio-grid">
+                <!-- Portfolio Item 1 -->
+                <div class="portfolio-item" data-category="commercial">
+                    <div class="portfolio-card">
+                        <div class="portfolio-thumbnail">
+                            <img src="https://via.placeholder.com/600x400/667eea/ffffff?text=Video+1" alt="Project 1">
+                            <div class="play-overlay">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="portfolio-info">
+                            <h3>AI-Enhanced Commercial Ad</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Portfolio Item 2 -->
+                <div class="portfolio-item" data-category="social">
+                    <div class="portfolio-card">
+                        <div class="portfolio-thumbnail">
+                            <img src="https://via.placeholder.com/600x400/764ba2/ffffff?text=Video+2" alt="Project 2">
+                            <div class="play-overlay">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="portfolio-info">
+                            <h3>Social Media Campaign</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Portfolio Item 3 -->
+                <div class="portfolio-item" data-category="corporate">
+                    <div class="portfolio-card">
+                        <div class="portfolio-thumbnail">
+                            <img src="https://via.placeholder.com/600x400/f093fb/ffffff?text=Video+3" alt="Project 3">
+                            <div class="play-overlay">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="portfolio-info">
+                            <h3>Corporate Presentation</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Portfolio Item 4 -->
+                <div class="portfolio-item" data-category="creative">
+                    <div class="portfolio-card">
+                        <div class="portfolio-thumbnail">
+                            <img src="https://via.placeholder.com/600x400/4facfe/ffffff?text=Video+4" alt="Project 4">
+                            <div class="play-overlay">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="portfolio-info">
+                            <h3>Creative Art Film</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Portfolio Item 5 -->
+                <div class="portfolio-item" data-category="commercial">
+                    <div class="portfolio-card">
+                        <div class="portfolio-thumbnail">
+                            <img src="https://via.placeholder.com/600x400/00f2fe/ffffff?text=Video+5" alt="Project 5">
+                            <div class="play-overlay">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="portfolio-info">
+                            <h3>Brand Story Video</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Portfolio Item 6 -->
+                <div class="portfolio-item" data-category="social">
+                    <div class="portfolio-card">
+                        <div class="portfolio-thumbnail">
+                            <img src="https://via.placeholder.com/600x400/43e97b/ffffff?text=Video+6" alt="Project 6">
+                            <div class="play-overlay">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="portfolio-info">
+                            <h3>Viral Marketing Content</h3>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                
+                <button class="carousel-btn carousel-next" id="carouselNext">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+                
+                <!-- Carousel Indicators -->
+                <div class="carousel-indicators" id="carouselIndicators"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="skills">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">AI Tools & Technologies</h2>
+                <div class="title-underline"></div>
+                <p class="section-description">Advanced AI tools I use for video editing and enhancement</p>
+            </div>
+            
+            <div class="skills-grid" style="grid-template-columns: 1fr; max-width: 800px; margin: 0 auto;">
+                <div class="skill-category">
+                    <div class="category-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h3>AI Tools</h3>
+                    <ul class="skill-list">
+                        <li>Runway ML</li>
+                        <li>Adobe Sensei</li>
+                        <li>Topaz Video AI</li>
+                        <li>Descript</li>
+                        <li>Synthesia</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Get In Touch</h2>
+                <div class="title-underline"></div>
+                <p class="section-description">Let's collaborate on your next video project</p>
+            </div>
+            
+            <div class="contact-content">
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>Email</h4>
+                            <a href="mailto:your.email@example.com">your.email@example.com</a>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-phone"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>Phone</h4>
+                            <a href="tel:+1234567890">+1 (234) 567-890</a>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>Location</h4>
+                            <p>Your City, Country</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>Created by MARK MANISAN</p>
+            <p>AI Video Editor Portfolio</p>
+        </div>
+    </footer>
+
+    <!-- Video Modal -->
+    <div id="videoModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div class="video-container">
+                <video controls style="width: 100%; height: 100%; object-fit: contain;">
+                    <source src="" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+        </div>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+    <script src="portfolio-loader.js"></script>
+    <script src="carousel.js"></script>
+</body>
+</html>
