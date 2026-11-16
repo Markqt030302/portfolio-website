@@ -97,65 +97,107 @@
         }
     });
     
-    // Load other data from localStorage
-    const portfolioData = localStorage.getItem('portfolioData');
-    if (!portfolioData) return;
-
-    const data = JSON.parse(portfolioData);
-
-    // Update Profile
-    if (data.profile) {
-        // Update name in navigation
-        const brandText = document.querySelector('.brand-text');
-        if (brandText) brandText.textContent = data.profile.name;
-
-        // Update hero section
-        const heroLines = document.querySelectorAll('.title-line');
-        if (heroLines.length >= 2) {
-            heroLines[0].textContent = data.profile.jobTitle;
-            heroLines[1].textContent = data.profile.tagline;
+    // Load profile, skills, and contact data from backend API
+    async function loadProfileDataFromServer() {
+        try {
+            const response = await fetch(`${API_URL}/api/get-portfolio`);
+            if (!response.ok) throw new Error('Failed to fetch profile data');
+            
+            const result = await response.json();
+            const serverData = result.data;
+            
+            if (serverData && Object.keys(serverData).length > 0) {
+                // Use server data
+                return {
+                    profile: serverData.profile || null,
+                    skills: serverData.skills || null,
+                    contact: serverData.contact || null
+                };
+            }
+        } catch (error) {
+            console.error('Error loading profile data from server:', error);
         }
-
-        // Update about section
-        const aboutParagraphs = document.querySelectorAll('.about-text p');
-        if (aboutParagraphs.length >= 2) {
-            aboutParagraphs[0].textContent = data.profile.aboutPara1;
-            aboutParagraphs[1].textContent = data.profile.aboutPara2;
-        }
-
-        // Update profile photo
-        if (data.profile.profilePhoto) {
-            const profileImg = document.querySelector('.about-image img');
-            if (profileImg) profileImg.src = data.profile.profilePhoto;
-        }
+        return null;
     }
-
-    // Update Skills - AI Tools only
-    if (data.skills) {
-        const skillList = document.querySelector('.skill-list');
-        if (skillList && data.skills.ai) {
-            const skills = data.skills.ai.split('\n').filter(skill => skill.trim());
-            skillList.innerHTML = skills.map(skill => `<li>${skill.trim()}</li>`).join('');
+    
+    // Try to load from server first, then fall back to localStorage
+    loadProfileDataFromServer().then(serverData => {
+        let data = null;
+        
+        if (serverData && serverData.profile) {
+            // Use server data
+            data = serverData;
+            console.log('Loaded profile data from server');
+        } else {
+            // Fall back to localStorage
+            const portfolioData = localStorage.getItem('portfolioData');
+            if (portfolioData) {
+                data = JSON.parse(portfolioData);
+                console.log('Loaded profile data from localStorage');
+            }
         }
+        
+        if (!data) return;
+        
+        updateProfileUI(data);
+    });
+    
+    // Function to update profile UI
+    function updateProfileUI(data) {
+        // Update Profile
+        if (data.profile) {
+            // Update name in navigation
+            const brandText = document.querySelector('.brand-text');
+            if (brandText) brandText.textContent = data.profile.name;
+
+            // Update hero section
+            const heroLines = document.querySelectorAll('.title-line');
+            if (heroLines.length >= 2) {
+                heroLines[0].textContent = data.profile.jobTitle;
+                heroLines[1].textContent = data.profile.tagline;
+            }
+
+            // Update about section
+            const aboutParagraphs = document.querySelectorAll('.about-text p');
+            if (aboutParagraphs.length >= 2) {
+                aboutParagraphs[0].textContent = data.profile.aboutPara1;
+                aboutParagraphs[1].textContent = data.profile.aboutPara2;
+            }
+
+            // Update profile photo
+            if (data.profile.profilePhoto) {
+                const profileImg = document.querySelector('.about-image img');
+                if (profileImg) profileImg.src = data.profile.profilePhoto;
+            }
+        }
+
+        // Update Skills - AI Tools only
+        if (data.skills) {
+            const skillList = document.querySelector('.skill-list');
+            if (skillList && data.skills.ai) {
+                const skills = data.skills.ai.split('\n').filter(skill => skill.trim());
+                skillList.innerHTML = skills.map(skill => `<li>${skill.trim()}</li>`).join('');
+            }
+        }
+
+        // Update Contact
+        if (data.contact) {
+            const emailLinks = document.querySelectorAll('a[href^="mailto:"]');
+            if (emailLinks.length > 0) {
+                emailLinks[0].href = `mailto:${data.contact.email}`;
+                emailLinks[0].textContent = data.contact.email;
+            }
+
+            const phoneLinks = document.querySelectorAll('a[href^="tel:"]');
+            if (phoneLinks.length > 0) {
+                phoneLinks[0].href = `tel:${data.contact.phone}`;
+                phoneLinks[0].textContent = data.contact.phone;
+            }
+
+            const locationText = document.querySelector('.contact-details p');
+            if (locationText) locationText.textContent = data.contact.location;
+        }
+
+        console.log('Portfolio data loaded successfully!');
     }
-
-    // Update Contact
-    if (data.contact) {
-        const emailLinks = document.querySelectorAll('a[href^="mailto:"]');
-        if (emailLinks.length > 0) {
-            emailLinks[0].href = `mailto:${data.contact.email}`;
-            emailLinks[0].textContent = data.contact.email;
-        }
-
-        const phoneLinks = document.querySelectorAll('a[href^="tel:"]');
-        if (phoneLinks.length > 0) {
-            phoneLinks[0].href = `tel:${data.contact.phone}`;
-            phoneLinks[0].textContent = data.contact.phone;
-        }
-
-        const locationText = document.querySelector('.contact-details p');
-        if (locationText) locationText.textContent = data.contact.location;
-    }
-
-    console.log('Portfolio data loaded successfully!');
 })();

@@ -34,13 +34,51 @@ let portfolioData = {
     }
 };
 
-// Load data from localStorage
-function loadData() {
-    const saved = localStorage.getItem('portfolioData');
-    if (saved) {
-        portfolioData = JSON.parse(saved);
-        populateFields();
+// Load data from localStorage and backend
+async function loadData() {
+    // First try to load from backend API
+    try {
+        const apiUrl = window.API_CONFIG ? window.API_CONFIG.API_URL : 'http://localhost:3000';
+        const response = await fetch(`${apiUrl}/api/get-portfolio`);
+        
+        if (response.ok) {
+            const result = await response.json();
+            const serverData = result.data;
+            
+            // Merge server data with default portfolioData
+            if (serverData.profile) {
+                portfolioData.profile = { ...portfolioData.profile, ...serverData.profile };
+            }
+            if (serverData.skills) {
+                portfolioData.skills = { ...portfolioData.skills, ...serverData.skills };
+            }
+            if (serverData.contact) {
+                portfolioData.contact = { ...portfolioData.contact, ...serverData.contact };
+            }
+            
+            // Save merged data to localStorage
+            localStorage.setItem('portfolioData', JSON.stringify(portfolioData));
+            
+            console.log('Loaded data from backend API');
+        }
+    } catch (error) {
+        console.error('Error loading from backend:', error);
+        // Fall back to localStorage
+        const saved = localStorage.getItem('portfolioData');
+        if (saved) {
+            portfolioData = JSON.parse(saved);
+        }
     }
+    
+    // If no backend data, try localStorage
+    if (!portfolioData.profile.name || portfolioData.profile.name === 'Your Name') {
+        const saved = localStorage.getItem('portfolioData');
+        if (saved) {
+            portfolioData = JSON.parse(saved);
+        }
+    }
+    
+    populateFields();
     
     // Also load videos from server and sync to localStorage
     syncVideosFromServer();
@@ -85,10 +123,51 @@ async function syncVideosFromServer() {
     }
 }
 
-// Save data to localStorage
-function saveData() {
+// Save data to localStorage and backend
+async function saveData() {
+    // Save to localStorage
     localStorage.setItem('portfolioData', JSON.stringify(portfolioData));
-    showSuccessMessage('All changes saved successfully!');
+    
+    // Also save to backend API
+    try {
+        const apiUrl = window.API_CONFIG ? window.API_CONFIG.API_URL : 'http://localhost:3000';
+        
+        // Save profile data
+        await fetch(`${apiUrl}/api/save-portfolio`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                key: 'profile',
+                value: portfolioData.profile
+            })
+        });
+        
+        // Save skills data
+        await fetch(`${apiUrl}/api/save-portfolio`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                key: 'skills',
+                value: portfolioData.skills
+            })
+        });
+        
+        // Save contact data
+        await fetch(`${apiUrl}/api/save-portfolio`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                key: 'contact',
+                value: portfolioData.contact
+            })
+        });
+        
+        showSuccessMessage('All changes saved successfully to server!');
+        console.log('Data saved to backend API');
+    } catch (error) {
+        console.error('Error saving to backend:', error);
+        showSuccessMessage('Saved locally (server sync failed)');
+    }
 }
 
 // Populate form fields

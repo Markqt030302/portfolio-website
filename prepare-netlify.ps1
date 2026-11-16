@@ -41,7 +41,7 @@ Write-Host ""
 Write-Host "Next steps:" -ForegroundColor Cyan
 Write-Host "1. Deploy backend to Render first (see DEPLOYMENT.md)" -ForegroundColor White
 Write-Host "2. Update config.js with your Render backend URL" -ForegroundColor White
-Write-Host "3. Drag & drop the '$deployFolder' folder to Netlify" -ForegroundColor White
+Write-Host "3. Drag and drop the '$deployFolder' folder to Netlify" -ForegroundColor White
 Write-Host "4. Or zip it and upload to Netlify" -ForegroundColor White
 Write-Host ""
 Write-Host "📖 Read DEPLOYMENT.md for detailed instructions" -ForegroundColor Yellow
