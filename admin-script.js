@@ -36,37 +36,48 @@ let portfolioData = {
 
 // Load data from localStorage and backend
 async function loadData() {
+    console.log('🔄 Loading data from backend...');
+    
     // First try to load from backend API
     try {
         const apiUrl = window.API_CONFIG ? window.API_CONFIG.API_URL : 'http://localhost:3000';
+        console.log('API URL:', apiUrl);
+        
         const response = await fetch(`${apiUrl}/api/get-portfolio`);
+        console.log('Response status:', response.status);
         
         if (response.ok) {
             const result = await response.json();
             const serverData = result.data;
             
+            console.log('Server data:', serverData);
+            
             // Merge server data with default portfolioData
             if (serverData.profile) {
                 portfolioData.profile = { ...portfolioData.profile, ...serverData.profile };
+                console.log('✅ Loaded profile from backend');
             }
             if (serverData.skills) {
                 portfolioData.skills = { ...portfolioData.skills, ...serverData.skills };
+                console.log('✅ Loaded skills from backend');
             }
             if (serverData.contact) {
                 portfolioData.contact = { ...portfolioData.contact, ...serverData.contact };
+                console.log('✅ Loaded contact from backend');
             }
             
             // Save merged data to localStorage
             localStorage.setItem('portfolioData', JSON.stringify(portfolioData));
             
-            console.log('Loaded data from backend API');
+            console.log('✅ Data loaded from backend API successfully');
         }
     } catch (error) {
-        console.error('Error loading from backend:', error);
+        console.error('❌ Error loading from backend:', error);
         // Fall back to localStorage
         const saved = localStorage.getItem('portfolioData');
         if (saved) {
             portfolioData = JSON.parse(saved);
+            console.log('📦 Loaded from localStorage instead');
         }
     }
     
@@ -75,6 +86,7 @@ async function loadData() {
         const saved = localStorage.getItem('portfolioData');
         if (saved) {
             portfolioData = JSON.parse(saved);
+            console.log('📦 Using localStorage data');
         }
     }
     
@@ -125,15 +137,19 @@ async function syncVideosFromServer() {
 
 // Save data to localStorage and backend
 async function saveData() {
+    console.log('💾 Saving data...');
+    
     // Save to localStorage
     localStorage.setItem('portfolioData', JSON.stringify(portfolioData));
+    console.log('✅ Saved to localStorage');
     
     // Also save to backend API
     try {
         const apiUrl = window.API_CONFIG ? window.API_CONFIG.API_URL : 'http://localhost:3000';
+        console.log('Saving to backend:', apiUrl);
         
         // Save profile data
-        await fetch(`${apiUrl}/api/save-portfolio`, {
+        const profileResponse = await fetch(`${apiUrl}/api/save-portfolio`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -141,9 +157,10 @@ async function saveData() {
                 value: portfolioData.profile
             })
         });
+        console.log('Profile save response:', profileResponse.status);
         
         // Save skills data
-        await fetch(`${apiUrl}/api/save-portfolio`, {
+        const skillsResponse = await fetch(`${apiUrl}/api/save-portfolio`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -151,9 +168,10 @@ async function saveData() {
                 value: portfolioData.skills
             })
         });
+        console.log('Skills save response:', skillsResponse.status);
         
         // Save contact data
-        await fetch(`${apiUrl}/api/save-portfolio`, {
+        const contactResponse = await fetch(`${apiUrl}/api/save-portfolio`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -161,11 +179,12 @@ async function saveData() {
                 value: portfolioData.contact
             })
         });
+        console.log('Contact save response:', contactResponse.status);
         
         showSuccessMessage('All changes saved successfully to server!');
-        console.log('Data saved to backend API');
+        console.log('✅ Data saved to backend API');
     } catch (error) {
-        console.error('Error saving to backend:', error);
+        console.error('❌ Error saving to backend:', error);
         showSuccessMessage('Saved locally (server sync failed)');
     }
 }
