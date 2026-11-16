@@ -1,5 +1,8 @@
 // Load portfolio data from admin panel
 (function() {
+    // Get API URL from config
+    const API_URL = window.API_CONFIG ? window.API_CONFIG.API_URL : 'http://localhost:3000';
+    
     const portfolioData = localStorage.getItem('portfolioData');
     if (!portfolioData) return;
 
@@ -40,7 +43,7 @@
                 <div class="portfolio-item" data-category="all">
                     <div class="portfolio-card" data-video-index="${index}">
                         <div class="portfolio-thumbnail">
-                            <img src="${item.thumbnail.startsWith('/uploads/') ? 'http://localhost:3000' + item.thumbnail : item.thumbnail}" alt="${item.title}">
+                            <img src="${item.thumbnail.startsWith('/uploads/') ? API_URL + item.thumbnail : item.thumbnail}" alt="${item.title}">
                             <div class="play-overlay">
                                 <i class="fas fa-play"></i>
                             </div>
@@ -69,7 +72,7 @@
                         // Direct upload video (server URL or base64)
                         // If it's a server path, prepend the server URL
                         const videoSrc = item.videoData.startsWith('/uploads/') 
-                            ? `http://localhost:3000${item.videoData}` 
+                            ? `${API_URL}${item.videoData}` 
                             : item.videoData;
                         
                         // Detect file extension for MIME type
