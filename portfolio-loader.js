@@ -3,6 +3,101 @@
     // Get API URL from config
     const API_URL = window.API_CONFIG ? window.API_CONFIG.API_URL : 'http://localhost:3000';
     
+    // Function to load videos from server API
+    async function loadVideosFromServer() {
+        try {
+            const response = await fetch(`${API_URL}/api/videos`);
+            if (!response.ok) throw new Error('Failed to fetch videos');
+            const data = await response.json();
+            return data.videos || [];
+        } catch (error) {
+            console.error('Error loading videos from server:', error);
+            return [];
+        }
+    }
+    
+    // Function to render portfolio videos
+    function renderPortfolio(videos) {
+        if (!videos || videos.length === 0) return;
+        
+        const portfolioGrid = document.querySelector('.portfolio-grid');
+        if (!portfolioGrid) return;
+        
+        portfolioGrid.innerHTML = videos.map((video, index) => {
+            const thumbnailUrl = video.thumbnail_url 
+                ? (video.thumbnail_url.startsWith('/uploads/') ? API_URL + video.thumbnail_url : video.thumbnail_url)
+                : 'https://via.placeholder.com/600x400/06b6d4/ffffff?text=Video';
+                
+            return `
+                <div class="portfolio-item" data-category="all">
+                    <div class="portfolio-card" data-video-index="${index}">
+                        <div class="portfolio-thumbnail">
+                            <img src="${thumbnailUrl}" alt="${video.title}" crossorigin="anonymous">
+                            <div class="play-overlay">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="portfolio-info">
+                            <h3>${video.title}</h3>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+        
+        // Attach click handlers for video modal
+        document.querySelectorAll('.portfolio-card').forEach((card, index) => {
+            card.addEventListener('click', () => {
+                const modal = document.getElementById('videoModal');
+                const videoContainer = modal.querySelector('.video-container');
+                const video = videos[index];
+                
+                // Build video URL
+                const videoUrl = video.video_url.startsWith('/uploads/') 
+                    ? API_URL + video.video_url 
+                    : video.video_url;
+                
+                // Determine if it's an embed or direct video
+                if (video.upload_type === 'embed' || videoUrl.includes('youtube.com') || videoUrl.includes('vimeo.com')) {
+                    // Embedded video
+                    videoContainer.innerHTML = `
+                        <iframe src="${videoUrl}" frameborder="0" allowfullscreen style="width: 100%; height: 100%;"></iframe>
+                    `;
+                } else {
+                    // Direct upload video
+                    videoContainer.innerHTML = `
+                        <video controls autoplay style="width: 100%; height: 100%; object-fit: contain; background: #000;" crossorigin="anonymous">
+                            <source src="${videoUrl}" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    `;
+                    
+                    const videoEl = videoContainer.querySelector('video');
+                    videoEl.load();
+                }
+                
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            });
+        });
+        
+        // Reinitialize carousel after a short delay
+        setTimeout(() => {
+            if (typeof PortfolioCarousel !== 'undefined') {
+                new PortfolioCarousel();
+            }
+        }, 200);
+    }
+    
+    // Load videos from server
+    loadVideosFromServer().then(videos => {
+        if (videos.length > 0) {
+            renderPortfolio(videos);
+            console.log(`Loaded ${videos.length} videos from server`);
+        }
+    });
+    
+    // Load other data from localStorage
     const portfolioData = localStorage.getItem('portfolioData');
     if (!portfolioData) return;
 
@@ -32,73 +127,6 @@
         if (data.profile.profilePhoto) {
             const profileImg = document.querySelector('.about-image img');
             if (profileImg) profileImg.src = data.profile.profilePhoto;
-        }
-    }
-
-    // Update Portfolio
-    if (data.portfolio && data.portfolio.length > 0) {
-        const portfolioGrid = document.querySelector('.portfolio-grid');
-        if (portfolioGrid) {
-            portfolioGrid.innerHTML = data.portfolio.map((item, index) => `
-                <div class="portfolio-item" data-category="all">
-                    <div class="portfolio-card" data-video-index="${index}">
-                        <div class="portfolio-thumbnail">
-                            <img src="${item.thumbnail.startsWith('/uploads/') ? API_URL + item.thumbnail : item.thumbnail}" alt="${item.title}">
-                            <div class="play-overlay">
-                                <i class="fas fa-play"></i>
-                            </div>
-                        </div>
-                        <div class="portfolio-info">
-                            <h3>${item.title}</h3>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-
-            // Re-attach video modal handlers
-            document.querySelectorAll('.portfolio-card').forEach((card, index) => {
-                card.addEventListener('click', () => {
-                    const modal = document.getElementById('videoModal');
-                    const videoContainer = modal.querySelector('.video-container');
-                    const item = data.portfolio[index];
-                    
-                    // Check if it's an embed or direct upload
-                    if (item.videoSource === 'embed' || item.videoData.includes('youtube.com') || item.videoData.includes('vimeo.com') || item.videoData.includes('player.vimeo.com')) {
-                        // Embedded video (YouTube/Vimeo)
-                        videoContainer.innerHTML = `
-                            <iframe src="${item.videoData}" frameborder="0" allowfullscreen style="width: 100%; height: 100%;"></iframe>
-                        `;
-                    } else {
-                        // Direct upload video (server URL or base64)
-                        // If it's a server path, prepend the server URL
-                        const videoSrc = item.videoData.startsWith('/uploads/') 
-                            ? `${API_URL}${item.videoData}` 
-                            : item.videoData;
-                        
-                        // Detect file extension for MIME type
-                        let mimeType = 'video/mp4';
-                        if (videoSrc.includes('.webm')) mimeType = 'video/webm';
-                        else if (videoSrc.includes('.mov')) mimeType = 'video/quicktime';
-                        else if (videoSrc.includes('.avi')) mimeType = 'video/x-msvideo';
-                        else if (videoSrc.includes('.mkv')) mimeType = 'video/x-matroska';
-                        
-                        videoContainer.innerHTML = `
-                            <video controls autoplay style="width: 100%; height: 100%; object-fit: contain; background: #000;">
-                                <source src="${videoSrc}" type="${mimeType}">
-                                <source src="${videoSrc}">
-                                Your browser does not support the video tag.
-                            </video>
-                        `;
-                        
-                        // Force video to load
-                        const video = videoContainer.querySelector('video');
-                        video.load();
-                    }
-                    
-                    modal.classList.add('active');
-                    document.body.style.overflow = 'hidden';
-                });
-            });
         }
     }
 
