@@ -1985,3 +1985,80 @@ h1, h2, .section-title {
     font-size: 0.9rem !important;
     padding: 0.5rem 0 !important;
 }
+
+/* ===== MOBILE RESPONSIVE FIXES ===== */
+@media (max-width: 768px) {
+    /* Navigation mobile fixes */
+    .navbar .container {
+        padding: 0.75rem 15px !important;
+    }
+    
+    .nav-brand {
+        gap: 8px !important;
+        flex-shrink: 1 !important;
+        max-width: 60% !important;
+        overflow: hidden !important;
+    }
+    
+    .brand-text {
+        font-size: 1rem !important;
+        letter-spacing: 0.5px !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+    }
+    
+    /* Hero mobile fixes */
+    .hero {
+        padding: 120px 20px 60px !important;
+    }
+    
+    .hero h1, .title-line {
+        font-size: 2rem !important;
+        letter-spacing: 0.5px !important;
+        line-height: 1.2 !important;
+        word-wrap: break-word !important;
+        overflow-wrap: break-word !important;
+    }
+    
+    /* Section spacing */
+    section {
+        padding: 3rem 15px !important;
+    }
+    
+    .section-title {
+        font-size: 1.5rem !important;
+        word-wrap: break-word !important;
+    }
+    
+    /* Skills mobile fix */
+    .skill-list li {
+        font-size: 0.9rem !important;
+        padding: 0.6rem 0.8rem !important;
+        white-space: normal !important;
+        word-wrap: break-word !important;
+    }
+    
+    /* Contact mobile fix */
+    .contact-details a,
+    .contact-details p {
+        font-size: 0.9rem !important;
+        word-wrap: break-word !important;
+        overflow-wrap: break-word !important;
+    }
+}
+
+/* Extra small devices */
+@media (max-width: 375px) {
+    .hero h1, .title-line {
+        font-size: 1.75rem !important;
+    }
+    
+    .brand-text {
+        font-size: 0.9rem !important;
+    }
+    
+    .nav-brand {
+        max-width: 50% !important;
+    }
+}
