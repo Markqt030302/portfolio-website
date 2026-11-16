@@ -38,7 +38,18 @@ let portfolioData = {
 async function loadData() {
     console.log('🔄 Loading data from backend...');
     
-    // First try to load from backend API
+    // First load from localStorage (immediate)
+    const saved = localStorage.getItem('portfolioData');
+    if (saved) {
+        const localData = JSON.parse(saved);
+        // Only use localStorage if it has actual data (not defaults)
+        if (localData.profile && localData.profile.name && localData.profile.name !== 'Your Name') {
+            portfolioData = localData;
+            console.log('📦 Using localStorage data (has valid data)');
+        }
+    }
+    
+    // Then try to load from backend API and merge
     try {
         const apiUrl = window.API_CONFIG ? window.API_CONFIG.API_URL : 'http://localhost:3000';
         console.log('API URL:', apiUrl);
@@ -52,42 +63,34 @@ async function loadData() {
             
             console.log('Server data:', serverData);
             
-            // Merge server data with default portfolioData
-            if (serverData.profile) {
-                portfolioData.profile = { ...portfolioData.profile, ...serverData.profile };
-                console.log('✅ Loaded profile from backend');
-            }
-            if (serverData.skills) {
-                portfolioData.skills = { ...portfolioData.skills, ...serverData.skills };
-                console.log('✅ Loaded skills from backend');
-            }
-            if (serverData.contact) {
-                portfolioData.contact = { ...portfolioData.contact, ...serverData.contact };
-                console.log('✅ Loaded contact from backend');
-            }
+            // Only merge if server has data
+            const hasServerData = serverData && (serverData.profile || serverData.skills || serverData.contact);
             
-            // Save merged data to localStorage
-            localStorage.setItem('portfolioData', JSON.stringify(portfolioData));
-            
-            console.log('✅ Data loaded from backend API successfully');
+            if (hasServerData) {
+                // Merge server data with current portfolioData (server takes priority)
+                if (serverData.profile) {
+                    portfolioData.profile = { ...portfolioData.profile, ...serverData.profile };
+                    console.log('✅ Loaded profile from backend');
+                }
+                if (serverData.skills) {
+                    portfolioData.skills = { ...portfolioData.skills, ...serverData.skills };
+                    console.log('✅ Loaded skills from backend');
+                }
+                if (serverData.contact) {
+                    portfolioData.contact = { ...portfolioData.contact, ...serverData.contact };
+                    console.log('✅ Loaded contact from backend');
+                }
+                
+                // Save merged data to localStorage
+                localStorage.setItem('portfolioData', JSON.stringify(portfolioData));
+                
+                console.log('✅ Data loaded from backend API successfully');
+            } else {
+                console.log('⚠️ No data on server, using local data');
+            }
         }
     } catch (error) {
         console.error('❌ Error loading from backend:', error);
-        // Fall back to localStorage
-        const saved = localStorage.getItem('portfolioData');
-        if (saved) {
-            portfolioData = JSON.parse(saved);
-            console.log('📦 Loaded from localStorage instead');
-        }
-    }
-    
-    // If no backend data, try localStorage
-    if (!portfolioData.profile.name || portfolioData.profile.name === 'Your Name') {
-        const saved = localStorage.getItem('portfolioData');
-        if (saved) {
-            portfolioData = JSON.parse(saved);
-            console.log('📦 Using localStorage data');
-        }
     }
     
     populateFields();
